@@ -265,20 +265,35 @@ include '../../layout/header.php';
             <div class="row mb-3">
                 <div class="col">
                 <?php
+include '../../config/database.php';
 
-// Ambil data penjualan dari database
+$database = new db();
+$database->koneksi();
 $sql = "SELECT penjualan.id_penjualan, buku.judul, penjualan.jumlah, penjualan.tanggal 
         FROM penjualan 
         INNER JOIN buku ON penjualan.id_buku = buku.id_buku";
+$result = $database->ambil_data($sql);
 
-$result = $koneksi->query($sql);
+// Periksa apakah ada hasil yang dikembalikan dari query
+if (count($result) > 0) {
+    // Tampilkan data dalam bentuk tabel
+    foreach ($result as $row) {
+        echo "<tr>";
+        echo "<td>" . $row['id_penjualan'] . "</td>";
+        echo "<td>" . $row['judul'] . "</td>";
+        echo "<td>" . $row['jumlah'] . "</td>";
+        echo "<td>" . $row['tanggal'] . "</td>";
+        echo "</tr>";
+    }
+} else {
+    echo "<tr><td colspan='4'>Tidak ada data penjualan</td></tr>";
+}
 ?>
 
 
     <div class="container">
         <h1>Riwayat Penjualan</h1>
-        <a href="index.php?module=penjualan&action=create" class="btn btn-primary">Tambah Penjualan</a>
-        <?php include 'layout/notification.php'; ?>
+        <a href="tambah.php" class="btn btn-primary">Tambah Penjualan</a>
         <table class="table">
             <thead>
                 <tr>
@@ -289,36 +304,16 @@ $result = $koneksi->query($sql);
                 </tr>
             </thead>
             <tbody>
-                <?php if ($result->num_rows > 0): ?>
-                    <?php $no = 1; ?>
-                    <?php while ($row = $result->fetch_assoc()): ?>
-                        <tr>
-                            <td><?= $no++ ?></td>
-                            <td><?= $row['judul'] ?></td>
-                            <td><?= $row['jumlah'] ?></td>
-                            <td><?= $row['tanggal'] ?></td>
-                            <td>
-                             <a href="index.php?module=penjualan&action=detail&id_penjualan=<?=$row['id_penjualan']?>" class="btn btn-info">Detail</a>
-                            <a href="process.php?module=penjualan&action=delete&id_penjualan=<?=$row['id_penjualan']?>" class="btn btn-danger">Delete</a>
-                            </td>
-
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="4">Tidak ada data penjualan.</td>
-                    </tr>
-                <?php endif; ?>
+             <?php   
+            
+?>
             </tbody>
         </table>
     </div>
     <!-- Tambahkan link ke JS Bootstrap di sini -->
 
 
-<?php
-// Tutup koneksi
-$koneksi->close();
-?>
+
                 </div>
             </div>
             <div class="row">
