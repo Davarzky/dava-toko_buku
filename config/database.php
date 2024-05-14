@@ -4,7 +4,7 @@ class db{
     private $host = 'localhost';
     private $username = 'root';
     private $password = '';
-    private $database = 'toko_buku_dava';
+    private $database = 'toko_buku_2';
     private $connection;
 
     public function koneksi(){
@@ -14,7 +14,7 @@ class db{
     public function ambil_data($query) {
         $result = $this->connection->query($query);
         $data = [];
-        if ($result->num_rows > 0) {
+        if ($result->num_rows > 0){
             while ($row = $result->fetch_assoc()) {
                 $data[] = $row;
             }

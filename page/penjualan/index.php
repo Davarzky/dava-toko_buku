@@ -1,4 +1,7 @@
 <?php
+session_start();
+
+include '../../layout/header.php';
 ?>
 
 <body>
@@ -218,7 +221,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="../page/auth/login.php">
+              <a class="dropdown-item d-flex align-items-center" href="../auth/login.php">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -238,9 +241,15 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../page/buku/index.php">
+        <a class="nav-link collapsed" href="index.php">
         <i class="bi bi-book"></i>
           <span>Buku</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="../penjualan/index.php">
+        <i class="bi bi-receipt"></i>
+          <span>Penjualan</span>
         </a>
       </li><!-- End Dashboard Nav -->
 
@@ -252,10 +261,80 @@
   <main id="main" class="main">
 
     <section class="section">
-     
-    </section>
+        <div class="container">
+            <div class="row mb-3">
+                <div class="col">
+                <?php
 
-  </main><!-- End #main -->
-  <?php
-  
-  ?>
+// Ambil data penjualan dari database
+$sql = "SELECT penjualan.id_penjualan, buku.judul, penjualan.jumlah, penjualan.tanggal 
+        FROM penjualan 
+        INNER JOIN buku ON penjualan.id_buku = buku.id_buku";
+
+$result = $koneksi->query($sql);
+?>
+
+
+    <div class="container">
+        <h1>Riwayat Penjualan</h1>
+        <a href="index.php?module=penjualan&action=create" class="btn btn-primary">Tambah Penjualan</a>
+        <?php include 'layout/notification.php'; ?>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Judul Buku</th>
+                    <th>Jumlah</th>
+                    <th>Tanggal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($result->num_rows > 0): ?>
+                    <?php $no = 1; ?>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= $no++ ?></td>
+                            <td><?= $row['judul'] ?></td>
+                            <td><?= $row['jumlah'] ?></td>
+                            <td><?= $row['tanggal'] ?></td>
+                            <td>
+                             <a href="index.php?module=penjualan&action=detail&id_penjualan=<?=$row['id_penjualan']?>" class="btn btn-info">Detail</a>
+                            <a href="process.php?module=penjualan&action=delete&id_penjualan=<?=$row['id_penjualan']?>" class="btn btn-danger">Delete</a>
+                            </td>
+
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="4">Tidak ada data penjualan.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+    <!-- Tambahkan link ke JS Bootstrap di sini -->
+
+
+<?php
+// Tutup koneksi
+$koneksi->close();
+?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                  
+                   
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </main><!-- End #main -->
+
+
+    <?php
+    include '../../layout/footer.php';
+    
+    ?>
