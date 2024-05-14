@@ -274,20 +274,7 @@ $sql = "SELECT penjualan.id_penjualan, buku.judul, penjualan.jumlah, penjualan.t
         INNER JOIN buku ON penjualan.id_buku = buku.id_buku";
 $result = $database->ambil_data($sql);
 
-// Periksa apakah ada hasil yang dikembalikan dari query
-if (count($result) > 0) {
-    // Tampilkan data dalam bentuk tabel
-    foreach ($result as $row) {
-        echo "<tr>";
-        echo "<td>" . $row['id_penjualan'] . "</td>";
-        echo "<td>" . $row['judul'] . "</td>";
-        echo "<td>" . $row['jumlah'] . "</td>";
-        echo "<td>" . $row['tanggal'] . "</td>";
-        echo "</tr>";
-    }
-} else {
-    echo "<tr><td colspan='4'>Tidak ada data penjualan</td></tr>";
-}
+
 ?>
 
 
@@ -305,7 +292,18 @@ if (count($result) > 0) {
             </thead>
             <tbody>
              <?php   
-            
+            if (count($result) > 0) {
+                foreach ($result as $row) {
+                    echo "<tr>";
+                    echo "<td>" . $row['id_penjualan'] . "</td>";
+                    echo "<td>" . $row['judul'] . "</td>";
+                    echo "<td>" . $row['jumlah'] . "</td>";
+                    echo "<td>" . $row['tanggal'] . "</td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='4'>Tidak ada data penjualan</td></tr>";
+            }
 ?>
             </tbody>
         </table>
