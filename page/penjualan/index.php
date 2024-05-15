@@ -270,7 +270,6 @@ include '../../config/database.php';
 $database = new db();
 $database->koneksi();
 
-// Search functionality
 $cari = isset($_GET['cari']) ? $_GET['cari'] : '';
 $sql = "SELECT penjualan.id_penjualan, buku.judul, penjualan.jumlah, penjualan.tanggal 
         FROM penjualan 
@@ -280,7 +279,7 @@ if (!empty($cari)) {
     $sql .= " WHERE buku.judul LIKE '%$cari%' OR penjualan.jumlah LIKE '%$cari%'";
 }
 
-// Pagination
+
 $limit = 7;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
@@ -297,6 +296,8 @@ $result = $database->ambil_data("$sql LIMIT $limit OFFSET $offset");
             <button class="btn btn-primary" type="submit">Cari</button>
         </div>
     </form>
+    <a href="tambah.php" class="btn btn-primary">Tambah Penjualan</a>
+
     <table class="table">
         <thead>
             <tr>
@@ -324,7 +325,6 @@ $result = $database->ambil_data("$sql LIMIT $limit OFFSET $offset");
         </tbody>
     </table>
     <?php
-    // Pagination links
     $total_pages = ceil($database->ambil_data("SELECT COUNT(*) AS total FROM ($sql) AS countResult")[0]['total'] / $limit);
     $previous_page = $page - 1;
     $next_page = $page + 1;
