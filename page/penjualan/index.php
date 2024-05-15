@@ -269,29 +269,45 @@ include '../../config/database.php';
 
 $database = new db();
 $database->koneksi();
+
+// Search functionality
+$cari = isset($_GET['cari']) ? $_GET['cari'] : '';
 $sql = "SELECT penjualan.id_penjualan, buku.judul, penjualan.jumlah, penjualan.tanggal 
         FROM penjualan 
         INNER JOIN buku ON penjualan.id_buku = buku.id_buku";
-$result = $database->ambil_data($sql);
 
+if (!empty($cari)) {
+    $sql .= " WHERE buku.judul LIKE '%$cari%' OR penjualan.jumlah LIKE '%$cari%'";
+}
+
+// Pagination
+$limit = 7;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+$result = $database->ambil_data("$sql LIMIT $limit OFFSET $offset");
 
 ?>
 
-
-    <div class="container">
-        <h1>Riwayat Penjualan</h1>
-        <a href="tambah.php" class="btn btn-primary">Tambah Penjualan</a>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Judul Buku</th>
-                    <th>Jumlah</th>
-                    <th>Tanggal</th>
-                </tr>
-            </thead>
-            <tbody>
-             <?php   
+<div class="container">
+    <h1>Riwayat Penjualan</h1>
+    <form action="" method="GET">
+        <div class="input-group mb-3">
+            <input type="text" name="cari" class="form-control" placeholder="Cari berdasarkan judul atau jumlah">
+            <button class="btn btn-primary" type="submit">Cari</button>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Judul Buku</th>
+                <th>Jumlah</th>
+                <th>Tanggal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
             if (count($result) > 0) {
                 foreach ($result as $row) {
                     echo "<tr>";
@@ -304,10 +320,33 @@ $result = $database->ambil_data($sql);
             } else {
                 echo "<tr><td colspan='4'>Tidak ada data penjualan</td></tr>";
             }
-?>
-            </tbody>
-        </table>
-    </div>
+            ?>
+        </tbody>
+    </table>
+    <?php
+    // Pagination links
+    $total_pages = ceil($database->ambil_data("SELECT COUNT(*) AS total FROM ($sql) AS countResult")[0]['total'] / $limit);
+    $previous_page = $page - 1;
+    $next_page = $page + 1;
+    ?>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+                <a class="page-link" href="?cari=<?= $cari ?>&page=<?= $previous_page ?>">Previous</a>
+            </li>
+            <?php for ($i = 1; $i <= $total_pages; $i++) : ?>
+                <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+                    <a class="page-link" href="?cari=<?= $cari ?>&page=<?= $i ?>"><?= $i ?></a>
+                </li>
+            <?php endfor; ?>
+            <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
+                <a class="page-link" href="?cari=<?= $cari ?>&page=<?= $next_page ?>">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
     <!-- Tambahkan link ke JS Bootstrap di sini -->
 
 
