@@ -8,7 +8,7 @@ class db{
     private $connection;
 
     public function koneksi(){
-        $this->connection = new mysqli($this->host,$this->username,$this->password,$this->database);
+        $this->connection = new mysqli($this->host,$this->username,$this->password,$this->database,$this->connection);
     }
 
     public function ambil_data($query) {
@@ -29,6 +29,13 @@ class db{
         } else {
             return false;
         }
+    }
+    public function execute_query($query, $params) {
+        $stmt = $this->connection->prepare($query);
+        $types = str_repeat('s', count($params)); 
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $stmt->close();
     }
 }
 

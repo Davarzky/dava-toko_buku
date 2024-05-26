@@ -296,7 +296,7 @@ $result = $database->ambil_data("$sql LIMIT $limit OFFSET $offset");
             <button class="btn btn-primary" type="submit">Cari</button>
         </div>
     </form>
-    <a href="tambah.php" class="btn btn-primary">Tambah Penjualan</a>
+    <a href="tambahh.php" class="btn btn-primary">Tambah Penjualan</a>
 
     <table class="table">
         <thead>
@@ -310,13 +310,14 @@ $result = $database->ambil_data("$sql LIMIT $limit OFFSET $offset");
         <tbody>
             <?php
             if (count($result) > 0) {
+              $nomor = 1;
                 foreach ($result as $row) {
-                    echo "<tr>";
-                    echo "<td>" . $row['id_penjualan'] . "</td>";
+                    echo "<td>" . $nomor . "</td>";
                     echo "<td>" . $row['judul'] . "</td>";
                     echo "<td>" . $row['jumlah'] . "</td>";
                     echo "<td>" . $row['tanggal'] . "</td>";
                     echo "</tr>";
+                    $nomor++;
                 }
             } else {
                 echo "<tr><td colspan='4'>Tidak ada data penjualan</td></tr>";

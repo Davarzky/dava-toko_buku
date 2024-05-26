@@ -272,6 +272,7 @@ include '../../layout/header.php';
                     </form>
                 </div>
             </div>
+            <a href="tambah.php" class="btn btn-primary">Tambah Buku</a>
             <div class="row">
                 <div class="col">
                     <?php
