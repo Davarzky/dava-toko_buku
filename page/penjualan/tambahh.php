@@ -131,13 +131,14 @@ $buku_json = json_encode($buku);
     });
 
     function calculateSubTotal(row) {
-        let harga = parseFloat(row.querySelector('.harga').value) || 0;
-        let jumlah = parseFloat(row.querySelector('.jumlah').value) || 0;
-        let diskon = parseFloat(row.querySelector('.diskon').value) || 0;
+    let harga = parseFloat(row.querySelector('.harga').value) || 0;
+    let jumlah = parseFloat(row.querySelector('.jumlah').value) || 0;
+    let diskon = parseFloat(row.querySelector('.diskon').value) || 0;
 
-        let sub_total = (harga * jumlah) - ((harga * jumlah) * (diskon / 100));
-        row.querySelector('.sub_total').value = sub_total.toFixed(2);
-    }
+    let sub_total = (harga * jumlah) - diskon;
+    row.querySelector('.sub_total').value = sub_total.toFixed(2);
+}
+
 
     function calculateTotal() {
         let total = 0;

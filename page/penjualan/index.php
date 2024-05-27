@@ -286,6 +286,8 @@ $offset = ($page - 1) * $limit;
 
 $result = $database->ambil_data("$sql LIMIT $limit OFFSET $offset");
 
+$nomor = $offset + 1;
+
 ?>
 
 <div class="container">
@@ -310,14 +312,12 @@ $result = $database->ambil_data("$sql LIMIT $limit OFFSET $offset");
         <tbody>
             <?php
             if (count($result) > 0) {
-              $nomor = 1;
                 foreach ($result as $row) {
-                    echo "<td>" . $nomor . "</td>";
+                    echo "<td>" . $nomor++ . "</td>";
                     echo "<td>" . $row['judul'] . "</td>";
                     echo "<td>" . $row['jumlah'] . "</td>";
                     echo "<td>" . $row['tanggal'] . "</td>";
                     echo "</tr>";
-                    $nomor++;
                 }
             } else {
                 echo "<tr><td colspan='4'>Tidak ada data penjualan</td></tr>";
